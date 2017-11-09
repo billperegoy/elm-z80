@@ -41,7 +41,10 @@ decode model =
         if model.currentInstruction == 0 then
             { model | decodedInstruction = Nop }
         else if topTwo == 1 then
-            { model | decodedInstruction = LD destReg srcReg }
+            if (srcReg == 5) || (srcReg == 6) || (destReg == 5) || (destReg == 6) then
+                { model | decodedInstruction = Nop }
+            else
+                { model | decodedInstruction = LD destReg srcReg }
         else
             { model | decodedInstruction = Nop }
 
