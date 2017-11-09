@@ -1,7 +1,7 @@
 module Model exposing (..)
 
 import Time
-import Array.Hamt
+import Array.Hamt as Array
 
 
 type alias Reg8 =
@@ -21,10 +21,16 @@ type alias Model =
     , d : Reg8
     , e : Reg8
     , h : Reg8
-    , l :
-        Reg8
-    , ram : Array.Hamt.Array Int
+    , l : Reg8
+    , currentInstruction : Reg8
+    , decodedInstruction : Instruction
+    , ram : Array.Array Int
     }
+
+
+type Instruction
+    = Nop
+    | LD Int Int
 
 
 type Msg
