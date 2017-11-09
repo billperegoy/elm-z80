@@ -13,13 +13,15 @@ update msg model =
                 |> fetch
                 |> decode
                 |> execute
-                |> incrementPc
                 |> noEffect
 
 
 fetch : Model -> Model
 fetch model =
-    { model | currentInstruction = Array.get model.pc model.ram |> Maybe.withDefault 0 }
+    { model
+        | currentInstruction = Array.get model.pc model.ram |> Maybe.withDefault 0
+        , pc = model.pc + 1
+    }
 
 
 decode : Model -> Model
@@ -29,8 +31,15 @@ decode model =
             model.currentInstruction
                 |> Bitwise.shiftRightBy 6
 
+        lowerThree =
+            model.currentInstruction
+                |> Bitwise.and 7
+
         registerLoadInstruction =
             topTwo == 1
+
+        registerLoadImmediateInstruction =
+            (topTwo == 0) && (lowerThree == 6)
 
         srcReg =
             model.currentInstruction
@@ -55,6 +64,20 @@ decode model =
 
                 ( Just dest, Just src ) ->
                     { model | decodedInstruction = LD dest src }
+        else if registerLoadImmediateInstruction then
+            case destReg of
+                Nothing ->
+                    { model | decodedInstruction = Nop }
+
+                Just dest ->
+                    let
+                        nextValue =
+                            Array.get model.pc model.ram |> Maybe.withDefault 0
+                    in
+                        { model
+                            | decodedInstruction = LDI dest nextValue
+                            , pc = model.pc + 1
+                        }
         else
             { model | decodedInstruction = Nop }
 
@@ -72,10 +95,8 @@ execute model =
             in
                 setRegContents dest srcVal model
 
-
-incrementPc : Model -> Model
-incrementPc model =
-    { model | pc = model.pc + 1 }
+        LDI dest value ->
+            setRegContents dest value model
 
 
 noEffect : Model -> ( Model, Cmd Msg )
