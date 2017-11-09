@@ -7,14 +7,14 @@ import Model exposing (..)
 init : ( Model, Cmd Msg )
 init =
     { pc = 0
-    , a = 0
-    , f = 0
-    , b = 0
-    , c = 0
-    , d = 0
-    , e = 0
-    , h = 0
-    , l = 0
+    , a = 2
+    , f = 5
+    , b = 8
+    , c = 9
+    , d = 11
+    , e = 15
+    , h = 17
+    , l = 20
     , currentInstruction = 0
     , decodedInstruction = Nop
     , ram =

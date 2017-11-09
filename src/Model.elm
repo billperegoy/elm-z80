@@ -28,9 +28,19 @@ type alias Model =
     }
 
 
+type Register
+    = A
+    | B
+    | C
+    | D
+    | E
+    | H
+    | L
+
+
 type Instruction
     = Nop
-    | LD Int Int
+    | LD Register Register
 
 
 type Msg
