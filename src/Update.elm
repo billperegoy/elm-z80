@@ -31,6 +31,10 @@ decode model =
             model.currentInstruction
                 |> Bitwise.shiftRightBy 6
 
+        topFive =
+            model.currentInstruction
+                |> Bitwise.shiftRightBy 3
+
         lowerThree =
             model.currentInstruction
                 |> Bitwise.and 7
@@ -40,6 +44,9 @@ decode model =
 
         registerLoadImmediateInstruction =
             (topTwo == 0) && (lowerThree == 6)
+
+        addInstruction =
+            topFive == 16
 
         srcReg =
             model.currentInstruction
@@ -78,6 +85,13 @@ decode model =
                             | decodedInstruction = LDI dest nextValue
                             , pc = model.pc + 1
                         }
+        else if addInstruction then
+            case srcReg of
+                Nothing ->
+                    { model | decodedInstruction = Nop }
+
+                Just src ->
+                    { model | decodedInstruction = ADD src }
         else
             { model | decodedInstruction = Nop }
 
@@ -97,6 +111,16 @@ execute model =
 
         LDI dest value ->
             setRegContents dest value model
+
+        ADD src ->
+            let
+                srcVal =
+                    getRegContents src model
+
+                aVal =
+                    getRegContents A model
+            in
+                setRegContents A (aVal + srcVal) model
 
 
 noEffect : Model -> ( Model, Cmd Msg )

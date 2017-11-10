@@ -40,5 +40,8 @@ init =
             |> Array.set 18 56
             |> Array.set 19 14
             |> Array.set 20 43
+            |> Array.set 21 128
+            |> Array.set 22 130
+            |> Array.set 23 129
     }
         ! []

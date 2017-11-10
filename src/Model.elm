@@ -42,6 +42,7 @@ type Instruction
     = Nop
     | LD Register Register
     | LDI Register Int
+    | ADD Register
 
 
 type Msg
