@@ -37,6 +37,23 @@ init =
             |> Array.set 15 128
             |> Array.set 16 130
             |> Array.set 17 129
-            |> Array.set 18 118
+            |> Array.set 18 5
+            |> Array.set 19 5
+            |> Array.set 20 5
+            |> Array.set 21 5
+            |> Array.set 22 5
+            |> Array.set 23 5
+            |> Array.set 24 5
+            |> Array.set 25 5
+            |> Array.set 26 5
+            |> Array.set 27 5
+            |> Array.set 28 5
+            |> Array.set 29 5
+            |> Array.set 30 12
+            |> Array.set 31 12
+            |> Array.set 32 12
+            |> Array.set 33 12
+            |> Array.set 34 12
+            |> Array.set 35 118
     }
         ! []

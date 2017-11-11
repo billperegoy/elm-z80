@@ -48,6 +48,12 @@ decode model =
         registerLoadImmediateInstruction =
             (topTwo == 0) && (lowerThree == 6)
 
+        decInstruction =
+            (topTwo == 0) && (lowerThree == 5)
+
+        incInstruction =
+            (topTwo == 0) && (lowerThree == 4)
+
         addInstruction =
             topFive == 16
 
@@ -90,6 +96,32 @@ decode model =
                             | decodedInstruction = LDI dest nextValue
                             , pc = model.pc + 1
                         }
+        else if decInstruction then
+            case destReg of
+                Nothing ->
+                    { model | decodedInstruction = ILLEGAL }
+
+                Just dest ->
+                    let
+                        nextValue =
+                            Array.get model.pc model.ram |> Maybe.withDefault 0
+                    in
+                        { model
+                            | decodedInstruction = DEC dest
+                        }
+        else if incInstruction then
+            case destReg of
+                Nothing ->
+                    { model | decodedInstruction = ILLEGAL }
+
+                Just dest ->
+                    let
+                        nextValue =
+                            Array.get model.pc model.ram |> Maybe.withDefault 0
+                    in
+                        { model
+                            | decodedInstruction = INC dest
+                        }
         else if addInstruction then
             case srcReg of
                 Nothing ->
@@ -126,6 +158,20 @@ execute model =
                     getRegContents A model
             in
                 setRegContents A (aVal + srcVal) model
+
+        DEC dest ->
+            let
+                destVal =
+                    getRegContents dest model
+            in
+                setRegContents dest (destVal - 1) model
+
+        INC dest ->
+            let
+                destVal =
+                    getRegContents dest model
+            in
+                setRegContents dest (destVal + 1) model
 
         HALT ->
             model

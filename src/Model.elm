@@ -43,6 +43,8 @@ type Instruction
     | LD Register Register
     | LDI Register Int
     | ADD Register
+    | INC Register
+    | DEC Register
     | HALT
     | ILLEGAL
 
