@@ -69,17 +69,17 @@ decode model =
         else if registerLoadInstruction then
             case ( srcReg, destReg ) of
                 ( Nothing, _ ) ->
-                    { model | decodedInstruction = NOP }
+                    { model | decodedInstruction = ILLEGAL }
 
                 ( _, Nothing ) ->
-                    { model | decodedInstruction = NOP }
+                    { model | decodedInstruction = ILLEGAL }
 
                 ( Just dest, Just src ) ->
                     { model | decodedInstruction = LD dest src }
         else if registerLoadImmediateInstruction then
             case destReg of
                 Nothing ->
-                    { model | decodedInstruction = NOP }
+                    { model | decodedInstruction = ILLEGAL }
 
                 Just dest ->
                     let
@@ -93,12 +93,12 @@ decode model =
         else if addInstruction then
             case srcReg of
                 Nothing ->
-                    { model | decodedInstruction = NOP }
+                    { model | decodedInstruction = ILLEGAL }
 
                 Just src ->
                     { model | decodedInstruction = ADD src }
         else
-            { model | decodedInstruction = NOP }
+            { model | decodedInstruction = ILLEGAL }
 
 
 execute : Model -> Model
@@ -129,6 +129,9 @@ execute model =
 
         HALT ->
             model
+
+        ILLEGAL ->
+            Debug.crash "Illegal instruction encountered"
 
 
 noEffect : Model -> ( Model, Cmd Msg )

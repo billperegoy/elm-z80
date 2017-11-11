@@ -44,6 +44,7 @@ type Instruction
     | LDI Register Int
     | ADD Register
     | HALT
+    | ILLEGAL
 
 
 type Msg
