@@ -6,4 +6,4 @@ import Time
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    Sub.batch [ Time.every Time.second Cycle ]
+    Sub.batch [ Time.every (1000 * Time.millisecond) Cycle ]

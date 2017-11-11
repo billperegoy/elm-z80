@@ -39,10 +39,11 @@ type Register
 
 
 type Instruction
-    = Nop
+    = NOP
     | LD Register Register
     | LDI Register Int
     | ADD Register
+    | HALT
 
 
 type Msg

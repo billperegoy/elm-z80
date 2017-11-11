@@ -18,10 +18,13 @@ update msg model =
 
 fetch : Model -> Model
 fetch model =
-    { model
-        | currentInstruction = Array.get model.pc model.ram |> Maybe.withDefault 0
-        , pc = model.pc + 1
-    }
+    if model.decodedInstruction == HALT then
+        model
+    else
+        { model
+            | currentInstruction = Array.get model.pc model.ram |> Maybe.withDefault 0
+            , pc = model.pc + 1
+        }
 
 
 decode : Model -> Model
@@ -60,21 +63,23 @@ decode model =
                 |> toReg
     in
         if model.currentInstruction == 0 then
-            { model | decodedInstruction = Nop }
+            { model | decodedInstruction = NOP }
+        else if model.currentInstruction == 118 then
+            { model | decodedInstruction = HALT }
         else if registerLoadInstruction then
             case ( srcReg, destReg ) of
                 ( Nothing, _ ) ->
-                    { model | decodedInstruction = Nop }
+                    { model | decodedInstruction = NOP }
 
                 ( _, Nothing ) ->
-                    { model | decodedInstruction = Nop }
+                    { model | decodedInstruction = NOP }
 
                 ( Just dest, Just src ) ->
                     { model | decodedInstruction = LD dest src }
         else if registerLoadImmediateInstruction then
             case destReg of
                 Nothing ->
-                    { model | decodedInstruction = Nop }
+                    { model | decodedInstruction = NOP }
 
                 Just dest ->
                     let
@@ -88,18 +93,18 @@ decode model =
         else if addInstruction then
             case srcReg of
                 Nothing ->
-                    { model | decodedInstruction = Nop }
+                    { model | decodedInstruction = NOP }
 
                 Just src ->
                     { model | decodedInstruction = ADD src }
         else
-            { model | decodedInstruction = Nop }
+            { model | decodedInstruction = NOP }
 
 
 execute : Model -> Model
 execute model =
     case model.decodedInstruction of
-        Nop ->
+        NOP ->
             model
 
         LD dest src ->
@@ -121,6 +126,9 @@ execute model =
                     getRegContents A model
             in
                 setRegContents A (aVal + srcVal) model
+
+        HALT ->
+            model
 
 
 noEffect : Model -> ( Model, Cmd Msg )

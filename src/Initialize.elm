@@ -8,7 +8,7 @@ init : ( Model, Cmd Msg )
 init =
     { pc = 0
     , a = 2
-    , f = 5
+    , f = 0
     , b = 8
     , c = 9
     , d = 11
@@ -16,7 +16,7 @@ init =
     , h = 17
     , l = 20
     , currentInstruction = 0
-    , decodedInstruction = Nop
+    , decodedInstruction = NOP
     , ram =
         Array.repeat 16384 0
             |> Array.set 0 0
@@ -43,5 +43,6 @@ init =
             |> Array.set 21 128
             |> Array.set 22 130
             |> Array.set 23 129
+            |> Array.set 24 118
     }
         ! []
